@@ -1,0 +1,72 @@
+import sqlite3
+
+# Function to create the Registration table
+def create_table():
+    conn = sqlite3.connect('registration.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS Register (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Email TEXT NOT NULL,
+                    DateOfBirth DATE
+                )''')
+    conn.commit()
+    conn.close()
+
+# Function to add a new record to the Registration table
+def create_record(name, email, dob):
+    conn = sqlite3.connect('registration.db')
+    c = conn.cursor()
+    c.execute('''INSERT INTO Register (Name, Email, DateOfBirth) VALUES (?, ?, ?)''', (name, email, dob))
+    conn.commit()
+    conn.close()
+
+# Function to retrieve all records from the Registration table
+def read_records():
+    conn = sqlite3.connect('registration.db')
+    c = conn.cursor()
+    c.execute('''SELECT * FROM Register''')
+    records = c.fetchall()
+    conn.close()
+    return records
+
+# Function to update an existing record in the Registration table
+def update_record(record_id, name, email, dob):
+    conn = sqlite3.connect('registration.db')
+    c = conn.cursor()
+    c.execute('''UPDATE Register SET Name=?, Email=?, DateOfBirth=? WHERE ID=?''', (name, email, dob, record_id))
+    conn.commit()
+    conn.close()
+
+# Function to delete a record from the Registration table
+def delete_record(record_id):
+    conn = sqlite3.connect('registration.db')
+    c = conn.cursor()
+    c.execute('''DELETE FROM Register WHERE ID=?''', (record_id,))
+    conn.commit()
+    conn.close()
+
+# Sample usage
+if __name__ == "__main__":
+    create_table()
+
+    # Create a new record
+    create_record('John Doe', 'john@example.com', '1990-01-01')
+
+    # Retrieve all records
+    print("All Records:")
+    print(read_records())
+
+    # Update an existing record
+    update_record(1, 'Jane Doe', 'jane@example.com', '1995-05-05')
+
+    # Retrieve all records after update
+    print("All Records after update:")
+    print(read_records())
+
+    # Delete a record
+    delete_record(1)
+
+    # Retrieve all records after deletion
+    print("All Records after deletion:")
+    print(read_records())
